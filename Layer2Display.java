@@ -1,6 +1,11 @@
 import java.awt.event.*;
 import javax.swing.*;
 
+/**
+* This displays a single layer 2 handler and sends/recieves user inputted layer 2 frames.
+*
+* @author	Andrew Quist, Sambridhi Acharya
+*/
 public class Layer2Display implements ActionListener, Layer2Listener
 {
     private L2Handler handler;
@@ -10,21 +15,34 @@ public class Layer2Display implements ActionListener, Layer2Listener
     private JTextField vidField;
     private JTextField payloadField;
 
+	/**
+	 * Creates all UI elements
+	 */
     public Layer2Display(L2Handler handler)
     {
 		this.handler = handler;
-		//handler.setListener(this);
+		handler.setListener(this);
 
+		/**
+		 * specifies the address being used at the top of the window
+		 */
 		JFrame frame = new JFrame(handler.toString());
 		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(),
 							       BoxLayout.PAGE_AXIS));
 
+		/**
+		 * This is where recieved frame payloads are displayed
+		 */
 		displayField = new JTextField(20);
 		displayField.setEditable(false);
 		frame.getContentPane().add(displayField);
 
 		frame.getContentPane().add(new JLabel("Address:"));
 
+		/**
+		 * All code below is defining user text input fields for sent frame information
+		 * -------------------------------------------------------------------------------------
+		 */
 		addressField = new JTextField(20);
 		addressField.addActionListener(this);
 		frame.getContentPane().add(addressField);
@@ -47,10 +65,23 @@ public class Layer2Display implements ActionListener, Layer2Listener
 		payloadField.addActionListener(this);
 		frame.getContentPane().add(payloadField);
 
+		/**
+		 * shows the frame on the screen
+		 */
 		frame.pack();
 		frame.setVisible(true);
-    }
+	}
+	
+	/**
+	 * when a frame comes in from the hanlder, it shows the recieved message on the display field
+	 */
+	public void frameRecieved(L2Handler h, L2Frame f){
+		displayField.setText(f.getPayload());
+	}
 
+	/**
+	 * This sends the frame created by the user input.
+	 */
     public void actionPerformed(ActionEvent e)
     {
 		displayField.setText("Sending...");
@@ -64,8 +95,10 @@ public class Layer2Display implements ActionListener, Layer2Listener
 				int vid = Integer.parseInt(vidField.getText());
 				String contents = payloadField.getText();
 
+				/**
+				 * makes a new frame to send via L2Handler
+				 */
 				L2Frame frame = new L2Frame(dest, source, type, vid, contents);
-
 				handler.send(frame);
 		    }
 			}.start();

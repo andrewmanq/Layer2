@@ -48,6 +48,36 @@ public class L2Frame {
 		//TESTS
 		//System.out.print(computeErrorCheck("111"));
 		//System.out.print(computeErrorCheck("110"));
+		//System.out.println(toDecimal("1010"));
+	}
+
+	/**
+	* Reads in a bitstring as a frame and parses all integer fields from it
+	* Throws an error if the first bit is not a 0 or the frame size is too small
+	*/
+	public L2Frame(String bitstring) throws IllegalArgumentException{
+		if(bitstring.charAt(0) != '0'){
+			throw new IllegalArgumentException();
+		}
+
+		try{
+			dst = toDecimal(bitstring.substring(1, 5));
+			src = toDecimal(bitstring.substring(6, 9));
+			type = toDecimal(bitstring.substring(10, 11));
+			vlanID = toDecimal(bitstring.substring(12, 13));
+			length = toDecimal(bitstring.substring(14, 21));
+			payload = bitstring.substring(22, 22 + length);
+		}catch (Exception e){
+			throw new IllegalArgumentException();
+		}
+	}
+
+	/**
+	* takes any binary bitstring and parses it to an integer
+	*/
+	private int toDecimal(String s){
+		int answer = Integer.parseInt(s,2);
+		return answer;
 	}
 
 

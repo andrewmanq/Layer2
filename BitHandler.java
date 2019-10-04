@@ -183,7 +183,7 @@ public class BitHandler extends Thread {
 	}
 
 	public void setListener(L2Handler l) {
-		//listener = l;
+		listener = l;
 	}
 
 	public boolean isSilent() {
